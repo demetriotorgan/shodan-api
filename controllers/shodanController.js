@@ -1,6 +1,7 @@
 const { getHostData } = require('../services/shodanService');
 const globalAnalyzer = require('../engine/aggregators/globalAnalyzer');
 const hostAnalyzer = require('../engine/analyzers/hostAnalyzer.js')
+const percentualScore = require('../engine/scorers/percentualScore.js');
 
 async function searchHost(req, res) {
 
@@ -34,6 +35,8 @@ async function searchHost(req, res) {
             });
         const globalAnalysis =
             globalAnalyzer(analyzedHosts);
+        const score =
+            percentualScore(globalAnalysis);
 
         /**
      * =========================================
@@ -44,6 +47,7 @@ async function searchHost(req, res) {
         res.json({
             target: data.target,
             totalHosts: analyzedHosts.length,
+            percentualScore: score,
             globalAnalysis,
             hosts: analyzedHosts,
             data
